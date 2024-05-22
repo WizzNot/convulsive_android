@@ -2,10 +2,19 @@ package com.example.convulsive;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import static java.security.AccessController.getContext;
+
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,7 +58,19 @@ public class MainActivity extends AppCompatActivity {
         productAdapter.setOnProductClickListener(new ProductAdapter.OnProductClickListener() {
             @Override
             public void onProductClick(Product product) {
-                Log.d("adapter", product.getName());
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.item_bottomsheet);
+                TextView itemName = dialog.findViewById(R.id.dialog_itemname);
+                TextView itemDescription = dialog.findViewById(R.id.dialog_itemdescription);
+                itemName.setText(product.getName());
+                itemDescription.setText(product.getDescription());
+                // Dialog showing
+                dialog.show();
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setGravity(Gravity.BOTTOM);
             }
         });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

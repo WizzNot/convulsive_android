@@ -32,6 +32,10 @@ public class Product {
         return imageResource;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public static List<Product> generateProductList(){
         ArrayList<Product> products = new ArrayList<>();
         Product fxckworkinghoodie = new Product("FXCK WORKING HOODIE", 6000, R.drawable.c0_1, R.drawable.c0_2, new String[]{"M", "L", "XL"}, "- Оверсайз крой\n" +
