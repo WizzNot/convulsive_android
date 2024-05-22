@@ -23,6 +23,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +62,21 @@ public class MainActivity extends AppCompatActivity {
                 Dialog dialog = new Dialog(MainActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.item_bottomsheet);
+                // Setting text
                 TextView itemName = dialog.findViewById(R.id.dialog_itemname);
                 TextView itemDescription = dialog.findViewById(R.id.dialog_itemdescription);
                 itemName.setText(product.getName());
                 itemDescription.setText(product.getDescription());
+                // Setting images
+                int[] images = new int[2];
+                images[0] = product.getImageResource();
+                images[1] = product.getAdditional_image();
+
+                ViewPager2 viewPager = dialog.findViewById(R.id.view_pager);
+                ImagesAdapter adapter = new ImagesAdapter(images);
+                viewPager.setAdapter(adapter);
+
+
                 // Dialog showing
                 dialog.show();
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;

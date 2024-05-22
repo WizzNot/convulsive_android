@@ -31,6 +31,7 @@ public class Product {
     public int getImageResource() {
         return imageResource;
     }
+    public int getAdditional_image() {return additional_image;}
 
     public String getDescription() {
         return description;
