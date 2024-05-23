@@ -13,8 +13,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -93,6 +95,14 @@ public class MainActivity extends AppCompatActivity {
                 ViewPager2 viewPager = dialog.findViewById(R.id.view_pager);
                 ImagesAdapter adapter = new ImagesAdapter(images);
                 viewPager.setAdapter(adapter);
+                // sizes
+                Spinner sizesSpinner = dialog.findViewById(R.id.spinner_size);
+                if (product.getSizes() != null && product.getSizes().length > 0) {
+                    sizesSpinner.setVisibility(View.VISIBLE);
+                    ArrayAdapter<String> sizesadapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, product.getSizes());
+                    sizesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sizesSpinner.setAdapter(sizesadapter);
+                }
                 // Dialog showing
                 dialog.show();
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;

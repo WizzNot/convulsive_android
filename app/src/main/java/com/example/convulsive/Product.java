@@ -36,6 +36,7 @@ public class Product {
     public String getDescription() {
         return description;
     }
+    public String[] getSizes() {return sizes;}
 
     public static List<Product> generateProductList(){
         ArrayList<Product> products = new ArrayList<>();
