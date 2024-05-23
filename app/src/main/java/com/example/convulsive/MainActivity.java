@@ -68,10 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 itemName.setText(product.getName());
                 itemDescription.setText(product.getDescription());
                 // Setting images
-                int[] images = new int[2];
-                images[0] = product.getImageResource();
-                images[1] = product.getAdditional_image();
-
+                int[] images = product.getImages();
                 ViewPager2 viewPager = dialog.findViewById(R.id.view_pager);
                 ImagesAdapter adapter = new ImagesAdapter(images);
                 viewPager.setAdapter(adapter);
