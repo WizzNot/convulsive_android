@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -50,6 +51,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Contact button is pressed");
+                Dialog contactDialog = new Dialog(MainActivity.this);
+                contactDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                contactDialog.setContentView(R.layout.contact_bottomsheet);
+                // Getting user info
+                EditText name = contactDialog.findViewById(R.id.contact_name);
+                EditText phone = contactDialog.findViewById(R.id.contact_phone);
+                Button contact_send = contactDialog.findViewById(R.id.contact_sendbutton);
+                // listener
+                contact_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("contact", (String)name.getText().toString() + " " + (String)phone.getText().toString());
+                    }
+                });
+                // Showing dialog
+                contactDialog.show();
+                contactDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                contactDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                contactDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                contactDialog.getWindow().setGravity(Gravity.BOTTOM);
             }
         });
         // generate products
@@ -72,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 ViewPager2 viewPager = dialog.findViewById(R.id.view_pager);
                 ImagesAdapter adapter = new ImagesAdapter(images);
                 viewPager.setAdapter(adapter);
-
-
                 // Dialog showing
                 dialog.show();
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
