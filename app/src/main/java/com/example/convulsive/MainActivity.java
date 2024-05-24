@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,12 +30,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<Product> productList;
     private ProductAdapter productAdapter;
+    private HashMap<Product, Integer> cart = new HashMap<>();
+    private boolean cart_is_visible = false;
 
 
     @Override
@@ -47,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // cartButton
+        ImageButton cartButton = findViewById(R.id.cartButton);
+        if(cart_is_visible) cartButton.setVisibility(View.VISIBLE);
+        else cartButton.setVisibility(View.GONE);
         // Contact Button
         Button contactButton = findViewById(R.id.contactButton);
         contactButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         productList = Product.generateProductList();
         productAdapter = new ProductAdapter(productList);
+        // cart making
+        for(Product x:productList) {
+            cart.put(x, 0);
+        }
+        // adapter
         productAdapter.setOnProductClickListener(new ProductAdapter.OnProductClickListener() {
             @Override
             public void onProductClick(Product product) {
@@ -88,8 +101,10 @@ public class MainActivity extends AppCompatActivity {
                 // Setting text
                 TextView itemName = dialog.findViewById(R.id.dialog_itemname);
                 TextView itemDescription = dialog.findViewById(R.id.dialog_itemdescription);
+                TextView itemPrice = dialog.findViewById(R.id.dialog_itemprice);
                 itemName.setText(product.getName());
                 itemDescription.setText(product.getDescription());
+                itemPrice.setText(String.valueOf(product.getPrice()) + "P");
                 // Setting images
                 int[] images = product.getImages();
                 ViewPager2 viewPager = dialog.findViewById(R.id.view_pager);
@@ -103,6 +118,18 @@ public class MainActivity extends AppCompatActivity {
                     sizesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sizesSpinner.setAdapter(sizesadapter);
                 }
+                // adding to cart
+                Button addButton = dialog.findViewById(R.id.item_addbutton);
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cart.put(product, cart.get(product) + 1);
+                        if(!cart_is_visible) {
+                            cart_is_visible = true;
+                            cartButton.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 // Dialog showing
                 dialog.show();
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;

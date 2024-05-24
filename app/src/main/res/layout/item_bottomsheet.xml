@@ -35,13 +35,29 @@
         app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
     <TextView
-        android:id="@+id/dialog_itemdescription"
+        android:id="@+id/dialog_itemprice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
-        android:gravity="center"
         android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="ITEM PRICE"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_itemname" />
+
+    <TextView
+        android:id="@+id/dialog_itemdescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
         android:text="ITEM DESCRIPTION"
         android:textColor="#000000"
         android:textSize="12dp"
@@ -49,7 +65,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_itemname" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_itemprice" />
+
     <Spinner
         android:id="@+id/spinner_size"
         android:layout_width="wrap_content"
