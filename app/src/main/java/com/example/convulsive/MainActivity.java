@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<Product> productList;
     private ProductAdapter productAdapter;
+    private ImageButton cartButton;
     private HashMap<ProductCart, Integer> cart = new HashMap<>();
     private boolean cart_is_visible = false;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (Map.Entry<ProductCart, Integer> entry : cart.entrySet()) {
             ProductCart productCart = entry.getKey();
-            int quantity = entry.getValue();
+            final int[] quantity = {entry.getValue()};
 
             // Создаем карточку товара
             View cartItemView = getLayoutInflater().inflate(R.layout.cart_item_product, null);
@@ -68,14 +69,61 @@ public class MainActivity extends AppCompatActivity {
             itemName.setText(productCart.getName());
 
             TextView itemPrice = cartItemView.findViewById(R.id.cart_itemprice);
-            itemPrice.setText(String.valueOf(productCart.getPrice() * quantity) + "Р");
+            itemPrice.setText(String.valueOf(productCart.getPrice() * quantity[0]) + "Р");
 
             TextView itemCount = cartItemView.findViewById(R.id.cart_countofitem);
-            itemCount.setText(String.valueOf(quantity));
+            itemCount.setText(String.valueOf(quantity[0]));
 
             TextView itemSize = cartItemView.findViewById(R.id.cart_itemsize);
             itemSize.setText(productCart.getSize());
 
+            // Buttons
+            Button decreaseButton = cartItemView.findViewById(R.id.cart_buttonDecrease);
+            Button increaseButton = cartItemView.findViewById(R.id.cart_buttonIncrease);
+            Button deleteItemButton = cartItemView.findViewById(R.id.cart_buttondelete);
+            // Listeners
+            decreaseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    quantity[0]--;
+                    cart.put(productCart, quantity[0]);
+                    if(quantity[0] <= 0){
+                        cartItemContainer.removeView(cartItemView);
+                        cart.remove(productCart);
+                        if(cart.size() == 0){
+                            dialog.dismiss();
+                            cart_is_visible=false;
+                            cartButton.setVisibility(View.GONE);
+                        }
+                    }
+                    else{
+                        itemPrice.setText(String.valueOf(productCart.getPrice() * quantity[0]) + "P");
+                        itemCount.setText(String.valueOf(quantity[0]));
+                    }
+                }
+            });
+            increaseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    quantity[0]++;
+                    cart.put(productCart, quantity[0]);
+                    itemPrice.setText(String.valueOf(productCart.getPrice() * quantity[0]) + "P");
+                    itemCount.setText(String.valueOf(quantity[0]));
+                }
+            });
+
+            deleteItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cartItemContainer.removeView(cartItemView);
+                    cart.remove(productCart);
+                    if(cart.size() == 0){
+                        dialog.dismiss();
+                        cart_is_visible = false;
+                        cartButton.setVisibility(View.GONE);
+                    }
+                }
+            });
             // Добавляем карточку товара в контейнер
             cartItemContainer.addView(cartItemView);
         }
@@ -93,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         // cartButton
-        ImageButton cartButton = findViewById(R.id.cartButton);
+        cartButton = findViewById(R.id.cartButton);
         if(cart_is_visible) cartButton.setVisibility(View.VISIBLE);
         else cartButton.setVisibility(View.GONE);
         cartButton.setOnClickListener(new View.OnClickListener() {
