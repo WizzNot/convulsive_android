@@ -7,12 +7,118 @@
     android:layout_height="match_parent">
 
     <!-- Динамическое добавление карточек товаров -->
+
+    <TextView
+        android:id="@+id/cart_yourorderText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="YOUR ORDER"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/cart_item_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_yourorderText">
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/cart_username"
+        android:layout_width="307dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="NAME"
+        android:background="@drawable/edit_text_border"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cart_item_container" />
+    <EditText
+        android:id="@+id/cart_usermail"
+        android:layout_width="307dp"
+        android:layout_height="43dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:hint="EMAIL"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cart_username" />
+
+    <EditText
+        android:id="@+id/cart_userphone"
+        android:layout_width="307dp"
+        android:layout_height="43dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:hint="PHONE"
+        android:inputType="phone"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cart_usermail" />
+
+    <TextView
+        android:layout_margin="10dp"
+        android:id="@+id/cart_orderprice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="TOTAL PRICE: ?"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_userphone"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cart_checkoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/black_button"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="CHECKOUT"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cart_orderprice" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_checkoutButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

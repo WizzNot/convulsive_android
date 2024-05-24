@@ -48,7 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean cart_is_visible = false;
 
     // В MainActivity
-    private void populateCart(Dialog dialog) {
+
+    private void ifCartIsEmpty(Dialog dialog){
+        dialog.dismiss();
+        cart_is_visible=false;
+        cartButton.setVisibility(View.GONE);
+    }
+    private void populateCart(Dialog dialog) { // method for a cart creating
+        final long[] totalPrice = {0};
         LinearLayout cartItemContainer = dialog.findViewById(R.id.cart_item_container);
 
         // Удаляем все существующие карточки товаров
@@ -70,13 +77,16 @@ public class MainActivity extends AppCompatActivity {
 
             TextView itemPrice = cartItemView.findViewById(R.id.cart_itemprice);
             itemPrice.setText(String.valueOf(productCart.getPrice() * quantity[0]) + "Р");
+            totalPrice[0] = totalPrice[0] + productCart.getPrice() * quantity[0];
 
             TextView itemCount = cartItemView.findViewById(R.id.cart_countofitem);
             itemCount.setText(String.valueOf(quantity[0]));
 
             TextView itemSize = cartItemView.findViewById(R.id.cart_itemsize);
             itemSize.setText(productCart.getSize());
-
+            // Order Price
+            TextView orderPrice = dialog.findViewById(R.id.cart_orderprice);
+            orderPrice.setText("TOTAL PRICE: " + String.valueOf(totalPrice[0]) + "P");
             // Buttons
             Button decreaseButton = cartItemView.findViewById(R.id.cart_buttonDecrease);
             Button increaseButton = cartItemView.findViewById(R.id.cart_buttonIncrease);
@@ -87,13 +97,13 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     quantity[0]--;
                     cart.put(productCart, quantity[0]);
+                    totalPrice[0] = totalPrice[0] - productCart.getPrice();
+                    orderPrice.setText("TOTAL PRICE: " + String.valueOf(totalPrice[0]) + "P");
                     if(quantity[0] <= 0){
                         cartItemContainer.removeView(cartItemView);
                         cart.remove(productCart);
                         if(cart.size() == 0){
-                            dialog.dismiss();
-                            cart_is_visible=false;
-                            cartButton.setVisibility(View.GONE);
+                            ifCartIsEmpty(dialog);
                         }
                     }
                     else{
@@ -105,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
             increaseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    totalPrice[0] = totalPrice[0] + productCart.getPrice();
+                    orderPrice.setText("TOTAL PRICE: " + String.valueOf(totalPrice[0]) + "P");
                     quantity[0]++;
                     cart.put(productCart, quantity[0]);
                     itemPrice.setText(String.valueOf(productCart.getPrice() * quantity[0]) + "P");
@@ -115,13 +127,25 @@ public class MainActivity extends AppCompatActivity {
             deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    totalPrice[0] = totalPrice[0] - quantity[0] * productCart.getPrice();
+                    orderPrice.setText("TOTAL PRICE: " + String.valueOf(totalPrice[0]) + "P");
                     cartItemContainer.removeView(cartItemView);
                     cart.remove(productCart);
                     if(cart.size() == 0){
-                        dialog.dismiss();
-                        cart_is_visible = false;
-                        cartButton.setVisibility(View.GONE);
+                        ifCartIsEmpty(dialog);
                     }
+                }
+            });
+            // EditTexts
+            EditText userName = dialog.findViewById(R.id.cart_username);
+            EditText email = dialog.findViewById(R.id.cart_usermail);
+            EditText phoneNumber = dialog.findViewById(R.id.cart_userphone);
+            // Checkout Button
+            Button checkoutButton = dialog.findViewById(R.id.cart_checkoutButton);
+            checkoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("checkout", userName.getText().toString() + " " + email.getText().toString() + " " + String.valueOf(totalPrice[0]));
                 }
             });
             // Добавляем карточку товара в контейнер
