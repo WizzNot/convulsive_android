@@ -3,13 +3,13 @@ package com.example.convulsive;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product {
-    private String name;
-    private int price;
-    private int imageResource;
+public class Product{
     private int[] images;
     private String[] sizes;
     private String description;
+    private String name;
+    private int price;
+    private int imageResource;
 
     public Product(String name, int price, int imageResource, int[] images, String[] sizes, String description) {
         this.name = name;
@@ -19,24 +19,15 @@ public class Product {
         this.description = description;
         this.images = images;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getImageResource() {
-        return imageResource;
-    }
     public int[] getImages() {return images;}
 
     public String getDescription() {
         return description;
     }
     public String[] getSizes() {return sizes;}
+    public String getName() {return name;}
+    public int getPrice() {return price;}
+    public int getImageResource() {return imageResource;}
 
     public static List<Product> generateProductList(){
         ArrayList<Product> products = new ArrayList<>();

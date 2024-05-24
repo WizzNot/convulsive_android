@@ -8,21 +8,6 @@
     android:background="@android:color/white"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/cartButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/round_button"
-        android:padding="7dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/cart_ico"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -118,6 +103,20 @@
 
         </RelativeLayout>
     </ScrollView>
+    <ImageButton
+        android:id="@+id/cartButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_button"
+        android:padding="7dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cart_ico"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 

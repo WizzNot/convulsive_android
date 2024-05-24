@@ -13,12 +13,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,13 +37,49 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<Product> productList;
     private ProductAdapter productAdapter;
-    private HashMap<Product, Integer> cart = new HashMap<>();
+    private HashMap<ProductCart, Integer> cart = new HashMap<>();
     private boolean cart_is_visible = false;
+
+    // В MainActivity
+    private void populateCart(Dialog dialog) {
+        LinearLayout cartItemContainer = dialog.findViewById(R.id.cart_item_container);
+
+        // Удаляем все существующие карточки товаров
+        cartItemContainer.removeAllViews();
+
+        for (Map.Entry<ProductCart, Integer> entry : cart.entrySet()) {
+            ProductCart productCart = entry.getKey();
+            int quantity = entry.getValue();
+
+            // Создаем карточку товара
+            View cartItemView = getLayoutInflater().inflate(R.layout.cart_item_product, null);
+
+            // Заполняем данные карточки товара
+            ImageView itemImage = cartItemView.findViewById(R.id.cart_itemimage);
+            itemImage.setImageResource(productCart.getImageResource());
+
+            TextView itemName = cartItemView.findViewById(R.id.cart_itemname);
+            itemName.setText(productCart.getName());
+
+            TextView itemPrice = cartItemView.findViewById(R.id.cart_itemprice);
+            itemPrice.setText(String.valueOf(productCart.getPrice() * quantity) + "Р");
+
+            TextView itemCount = cartItemView.findViewById(R.id.cart_countofitem);
+            itemCount.setText(String.valueOf(quantity));
+
+            TextView itemSize = cartItemView.findViewById(R.id.cart_itemsize);
+            itemSize.setText(productCart.getSize());
+
+            // Добавляем карточку товара в контейнер
+            cartItemContainer.addView(cartItemView);
+        }
+    }
 
 
     @Override
@@ -55,6 +96,21 @@ public class MainActivity extends AppCompatActivity {
         ImageButton cartButton = findViewById(R.id.cartButton);
         if(cart_is_visible) cartButton.setVisibility(View.VISIBLE);
         else cartButton.setVisibility(View.GONE);
+        cartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("cartButton", "wtf");
+                Dialog cartDialog = new Dialog(MainActivity.this);
+                cartDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cartDialog.setContentView(R.layout.cart_bottomsheet);
+                populateCart(cartDialog);
+                cartDialog.show();
+                cartDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                cartDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                cartDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cartDialog.getWindow().setGravity(Gravity.BOTTOM);
+            }
+        });
         // Contact Button
         Button contactButton = findViewById(R.id.contactButton);
         contactButton.setOnClickListener(new View.OnClickListener() {
@@ -87,10 +143,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         productList = Product.generateProductList();
         productAdapter = new ProductAdapter(productList);
-        // cart making
-        for(Product x:productList) {
-            cart.put(x, 0);
-        }
         // adapter
         productAdapter.setOnProductClickListener(new ProductAdapter.OnProductClickListener() {
             @Override
@@ -123,11 +175,25 @@ public class MainActivity extends AppCompatActivity {
                 addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        cart.put(product, cart.get(product) + 1);
-                        if(!cart_is_visible) {
+                        String size = "";
+                        if(product.getSizes().length > 0){
+                            size = sizesSpinner.getSelectedItem().toString();
+                        }
+                        ProductCart newProductcart = new ProductCart(product.getName(), product.getPrice(), product.getImageResource(), size);
+                        if(!cart.containsKey(newProductcart)){
+                            cart.put(newProductcart, 1);
+                        }
+                        else{
+                            cart.put(newProductcart, cart.get(newProductcart) + 1);
+                        }
+                        if (!cart_is_visible) {
                             cart_is_visible = true;
+                            Animation fadeInAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
+                            cartButton.startAnimation(fadeInAnimation);
                             cartButton.setVisibility(View.VISIBLE);
                         }
+                        Toast.makeText(dialog.getContext(), "added to cart", Toast.LENGTH_LONG);
+                        dialog.dismiss();
                     }
                 });
                 // Dialog showing
