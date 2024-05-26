@@ -3,6 +3,7 @@ package com.example.convulsive;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import static java.security.AccessController.getContext;
+import static com.example.convulsive.server_data.ServiceConstructor.CreateService;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -34,10 +35,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.convulsive.server_data.CheckoutData;
+import com.example.convulsive.server_data.Server;
+import com.example.convulsive.server_data.ServiceConstructor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -145,7 +154,32 @@ public class MainActivity extends AppCompatActivity {
             checkoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d("checkout", userName.getText().toString() + " " + email.getText().toString() + " " + String.valueOf(totalPrice[0]));
+                    String name = userName.getText().toString();
+                    String user_email = email.getText().toString();
+                    String phone = phoneNumber.getText().toString();
+                    int price = (int)totalPrice[0];
+                    List<String> items = new ArrayList<>();
+                    List<ProductCart> cartKeys = new ArrayList<ProductCart>(cart.keySet());
+                    for(int i=0; i< cartKeys.size(); i++){
+                        items.add(cartKeys.get(i).getName() + ": " + String.valueOf(cart.get(cartKeys.get(i))));
+                    }
+                    CheckoutData checkoutData = new CheckoutData(name, user_email, phone, String.join("\n", items), price);
+
+                    // making request
+                    Call<CheckoutData> call = CreateService(Server.class, "https://a5cb-109-187-78-243.ngrok-free.app").checkout(checkoutData);
+                    call.enqueue(new Callback<CheckoutData>() {
+                        @Override
+                        public void onResponse(Call<CheckoutData> call, Response<CheckoutData> response) {
+                            if(response.isSuccessful()){
+                                Log.d("post", "success");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CheckoutData> call, Throwable t) {
+                            Log.d("post", "failure");
+                        }
+                    });
                 }
             });
             // Добавляем карточку товара в контейнер
