@@ -39,4 +39,8 @@ public class CheckoutData {
         this.items = items;
         this.price = price;
     }
+    public CheckoutData(String name, String phoneNumber){
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 }

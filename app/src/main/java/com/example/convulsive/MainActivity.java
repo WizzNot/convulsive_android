@@ -266,7 +266,51 @@ public class MainActivity extends AppCompatActivity {
                 contact_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("contact", (String)name.getText().toString() + " " + (String)phone.getText().toString());
+                        String username = name.getText().toString();
+                        String userPhone = phone.getText().toString();
+                        if (username.isEmpty() || userPhone.isEmpty()) {
+                            Toast.makeText(contactDialog.getContext(), "Please fill in all fields", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        Log.d("contact", username + " " + userPhone);
+                        CheckoutData contactData = new CheckoutData(username, userPhone);
+                        // making request
+                        Call<CheckoutData> call = CreateService(Server.class, Config.SERVER_URL).contact(contactData);
+                        call.enqueue(new Callback<CheckoutData>() {
+                            @Override
+                            public void onResponse(Call<CheckoutData> call, Response<CheckoutData> response) {
+                                if(response.isSuccessful()){
+                                    Log.d("Contact", "Success");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(contactDialog.getContext(), "Success", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    contactDialog.dismiss();
+                                }
+                                else{
+                                    Log.d("Contact", "Failure");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(contactDialog.getContext(), "Failure", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CheckoutData> call, Throwable t) {
+                                Log.d("Contact", "Failure");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(contactDialog.getContext(), "Failure", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
                 // Showing dialog
