@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.convulsive.server_data.CheckoutData;
+import com.example.convulsive.server_data.Config;
 import com.example.convulsive.server_data.Server;
 import com.example.convulsive.server_data.ServiceConstructor;
 
@@ -157,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
                     String name = userName.getText().toString();
                     String user_email = email.getText().toString();
                     String phone = phoneNumber.getText().toString();
+                    if (name.isEmpty() || user_email.isEmpty() || phone.isEmpty()) {
+                        Toast.makeText(dialog.getContext(), "Please fill in all fields", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     int price = (int)totalPrice[0];
                     List<String> items = new ArrayList<>();
                     List<ProductCart> cartKeys = new ArrayList<ProductCart>(cart.keySet());
@@ -166,18 +171,33 @@ public class MainActivity extends AppCompatActivity {
                     CheckoutData checkoutData = new CheckoutData(name, user_email, phone, String.join("\n", items), price);
 
                     // making request
-                    Call<CheckoutData> call = CreateService(Server.class, "https://a5cb-109-187-78-243.ngrok-free.app").checkout(checkoutData);
+                    Call<CheckoutData> call = CreateService(Server.class, Config.SERVER_URL).checkout(checkoutData);
                     call.enqueue(new Callback<CheckoutData>() {
                         @Override
                         public void onResponse(Call<CheckoutData> call, Response<CheckoutData> response) {
-                            if(response.isSuccessful()){
                                 Log.d("post", "success");
-                            }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(dialog.getContext(), "Success", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                dialog.dismiss();
+                                cart = new HashMap<>();
+                                cartButton.setVisibility(View.GONE);
+                                cart_is_visible = false;
                         }
 
                         @Override
                         public void onFailure(Call<CheckoutData> call, Throwable t) {
                             Log.d("post", "failure");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(dialog.getContext(), "Failure", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            dialog.dismiss();
                         }
                     });
                 }
