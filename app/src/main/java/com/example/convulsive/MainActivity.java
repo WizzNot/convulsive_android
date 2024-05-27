@@ -175,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
                     call.enqueue(new Callback<CheckoutData>() {
                         @Override
                         public void onResponse(Call<CheckoutData> call, Response<CheckoutData> response) {
+                            if (response.isSuccessful()) {
+                                // Успешный ответ, вы можете обработать данные
                                 Log.d("post", "success");
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -186,8 +188,18 @@ public class MainActivity extends AppCompatActivity {
                                 cart = new HashMap<>();
                                 cartButton.setVisibility(View.GONE);
                                 cart_is_visible = false;
+                            } else {
+                                // Неуспешный ответ, вы можете обработать код ошибки
+                                Log.d("post", "failure");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(dialog.getContext(), "Failure", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
                         }
-
                         @Override
                         public void onFailure(Call<CheckoutData> call, Throwable t) {
                             Log.d("post", "failure");
