@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     List<String> items = new ArrayList<>();
                     List<ProductCart> cartKeys = new ArrayList<ProductCart>(cart.keySet());
                     for(int i=0; i< cartKeys.size(); i++){
-                        items.add(cartKeys.get(i).getName() + ": " + String.valueOf(cart.get(cartKeys.get(i))));
+                        items.add(cartKeys.get(i).getName() + " " + cartKeys.get(i).getSize() + ": " + String.valueOf(cart.get(cartKeys.get(i))));
                     }
                     CheckoutData checkoutData = new CheckoutData(name, user_email, phone, String.join("\n", items), price);
 
